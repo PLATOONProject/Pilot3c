@@ -35,11 +35,11 @@ def FloorExtraction():
 
 def SystemExtraction():
     dic = {
-            "CLD":"plt:coolingsystem",
-            "CLS":"plt:Ventilationsystem",
-            "ELS":"seas:electricpowersystem",
-            "HOT":"plt:heatingsystem",
-            "OTH":"seas:System"
+            "CLD":"https://w3id.org/platoon/coolingsystem",
+            "CLS":"https://w3id.org/platoon/Ventilationsystem",
+            "ELS":"https://w3id.org/seas/electricpowersystem",
+            "HOT":"https://w3id.org/platoon/heatingsystem",
+            "OTH":"https://w3id.org/seas/System"
             }
     for key in dic:
         if key in str(global_dic["systemTag"]):
@@ -47,30 +47,30 @@ def SystemExtraction():
 
 def PropertyExtraction():
     dic = {
-            "ALM":"Alarm/plt:Alert",
-            "CLK":"time:hours",
-            "CUR":"seas:ElectricalCurrent",
-            "ENG":"seas:electricEnergyProperty",
-            "FRQ":"seas:frequencyproperty",
-            "HEX":"saref:Humidity",
-            "I01":"seas:rCurrent",
-            "I02":"seas:sCurrent",
-            "I03":"seas:tCurrent",
-            "MFR":"plt:WaterFlow",
-            "PWR":"Power",
-            "RAD":"seas:DirectRadiation",
-            "SPC":"plt:coolingairtemperaturesetpoint",
-            "SPH":"plt:heatingairtemperaturesetpoint",
-            "SPO":"saref:state",
-            "STA":"saref:state",
-            "TAM":"plt:indoorAirTemperature",
-            "TEX":"plt:OutdoorAirTemperature",
-            "TRE":"temperature(return)/saref:temperature",
-            "TSU":"temperature(supply)/saref:temperature",
-            "V01":"seas:RSVoltage",
-            "V02":"seas:STVoltage",
-            "V03":"seas:TRVoltage",
-            "TMP":"saref:Temperature"
+            "ALM":"https://w3id.org/platoon/Alert",
+            "CLK":"http://www.w3.org/2006/time#hours",
+            "CUR":"https://w3id.org/seas/ElectricalCurrent",
+            "ENG":"https://w3id.org/seas/electricEnergyProperty",
+            "FRQ":"https://w3id.org/seas/frequencyproperty",
+            "HEX":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#Humidity",
+            "I01":"https://w3id.org/seas/rCurrent",
+            "I02":"https://w3id.org/seas/sCurrent",
+            "I03":"https://w3id.org/seas/tCurrent",
+            "MFR":"https://w3id.org/platoon/WaterFlow",
+            "PWR":"https://saref.etsi.org/core/Power",
+            "RAD":"https://w3id.org/seas/DirectRadiation",
+            "SPC":"https://w3id.org/platoon/coolingairtemperaturesetpoint",
+            "SPH":"https://w3id.org/platoon/heatingairtemperaturesetpoint",
+            "SPO":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#state",
+            "STA":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#state",
+            "TAM":"https://w3id.org/platoon/indoorAirTemperature",
+            "TEX":"https://w3id.org/platoon/OutdoorAirTemperature",
+            "TRE":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#temperature",
+            "TSU":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#temperature",
+            "V01":"https://w3id.org/seas/RSVoltage",
+            "V02":"https://w3id.org/seas/STVoltage",
+            "V03":"https://w3id.org/seas/TRVoltage",
+            "TMP":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#Temperature"
             }
     for key in dic:
         if key in str(global_dic["propertyTag"]):
@@ -78,15 +78,15 @@ def PropertyExtraction():
 
 def DeviceExtraction1():
     dic = {
-            "AHU":"brick:AHU",
-            "CHI":"brick:chiller",
-            "CME":"saref:EnergyMeter(Cold)",
-            "EME":"seas:ElectricityMeter",
-            "FAC":"brick:Fan Coil Unit",
-            "HME":"saref:EnergyMeter(Heat)",
-            "PUM":"plt:Pump",
-            "PVP":"seas:SolarPanel",
-            "OTH":"saref:device"
+            "AHU":"https://brickschema.org/schema/1.1/Brick#AHU",
+            "CHI":"https://brickschema.org/schema/1.1/Brick#chiller",
+            "CME":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#EnergyMeter(Cold)",
+            "EME":"https://w3id.org/seas/ElectricityMeter",
+            "FAC":"https://brickschema.org/schema/1.1/Brick#Fan Coil Unit",
+            "HME":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#EnergyMeter(Heat)",
+            "PUM":"https://w3id.org/platoon/Pump",
+            "PVP":"https://w3id.org/seas/SolarPanel",
+            "OTH":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#device"
             }
     for key in dic:
         if key in str(global_dic["deviceTag"]):
@@ -99,18 +99,18 @@ def DeviceExtraction2():
 
 def DeviceExtraction3():
     dic = {
-            "AHU":"brick:AHU",
-            "BOI":"brick:boiler",
-            "CHI":"brick:chiller",
-            "EVA":"Plt:ChillerEvaporator",
-            "HAL":"bot:zone",
-            "KIT":"bot:zone",
-            "OFF":"bot:zone",
-            "PAS":"plt:ventilationsystem",
-            "PLG":"brick:Plug",
-            "PUM":"plt:Pump",
-            "PVP":"seas:SolarPanel",
-            "TPU":"plt:pump",
+            "AHU":"https://brickschema.org/schema/1.1/Brick#AHU",
+            "BOI":"https://brickschema.org/schema/1.1/Brick#boiler",
+            "CHI":"https://brickschema.org/schema/1.1/Brick#chiller",
+            "EVA":"https://w3id.org/platoon/ChillerEvaporator",
+            "HAL":"https://w3id.org/bot#zone",
+            "KIT":"https://w3id.org/bot#zone",
+            "OFF":"https://w3id.org/bot#zone",
+            "PAS":"https://w3id.org/platoon/ventilationsystem",
+            "PLG":"https://brickschema.org/schema/1.1/Brick#Plug",
+            "PUM":"https://w3id.org/platoon/Pump",
+            "PVP":"https://w3id.org/seas/SolarPanel",
+            "TPU":"https://w3id.org/platoon/pump",
             "172":"172",
             "171":"171",
             "142":"142",
@@ -123,11 +123,11 @@ def DeviceExtraction3():
             "3":"3",
             "2":"2",
             "1":"1",
-            "FAC":"brick:Fan Coil Unit",
-            "GEN":"seas:ElectricPowerProducer",
-            "GRD":"eas:ElectricPowerSystem",
-            "PAS":"plt:VentilationSystem",
-            "UNS":"seas:system"
+            "FAC":"https://brickschema.org/schema/1.1/Brick#Fan Coil Unit",
+            "GEN":"https://w3id.org/seas/ElectricPowerProducer",
+            "GRD":"https://w3id.org/seas/ElectricPowerSystem",
+            "PAS":"https://w3id.org/platoon/VentilationSystem",
+            "UNS":"https://w3id.org/seas/system"
     }
     for key in dic:
         if key in str(global_dic["deviceTag"]):

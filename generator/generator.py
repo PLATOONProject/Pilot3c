@@ -623,8 +623,10 @@ def semantify_mysql(row, row_headers, triples_map, triples_map_list, output_file
 					if duplicate == "yes":
 						if dic_table[predicate + "_" + obj] not in g_triples:
 							knowledge_graph += rdf_type
+							g_triples.update({dic_table[predicate  + "_" + obj ] : {dic_table[subject] + "_" + dic_table[obj]: ""}})
 						elif dic_table[subject] + "_" + dic_table[obj] not in g_triples[dic_table[predicate + "_" + obj]]:
 							knowledge_graph += rdf_type
+							g_triples[dic_table[predicate + "_" + obj]].update({dic_table[subject] + "_" + dic_table[obj] : ""})
 					else:
 						knowledge_graph += rdf_type
 
@@ -910,13 +912,17 @@ def semantify_mysql(row, row_headers, triples_map, triples_map_list, output_file
 					if predicate in general_predicates:
 						if dic_table[predicate + "_" + predicate_object_map.object_map.value] not in g_triples:					
 							knowledge_graph += triple
+							g_triples.update({dic_table[predicate + "_" + predicate_object_map.object_map.value] : {dic_table[subject] + "_" + dic_table[object]: ""}})
 						elif dic_table[subject] + "_" + dic_table[object] not in g_triples[dic_table[predicate + "_" + predicate_object_map.object_map.value]]:
 							knowledge_graph += triple
+							g_triples[dic_table[predicate + "_" + predicate_object_map.object_map.value]].update({dic_table[subject] + "_" + dic_table[object]: ""})
 					else:
 						if dic_table[predicate] not in g_triples:					
 							knowledge_graph += triple
+							g_triples.update({dic_table[predicate] : {dic_table[subject] + "_" + dic_table[object]: ""}})
 						elif dic_table[subject] + "_" + dic_table[object] not in g_triples[dic_table[predicate]]:
 							knowledge_graph += triple
+							g_triples[dic_table[predicate]].update({dic_table[subject] + "_" + dic_table[object]: ""})
 				else:
 					knowledge_graph += triple
 		elif predicate is not None and subject is not None and object_list:
@@ -936,13 +942,17 @@ def semantify_mysql(row, row_headers, triples_map, triples_map_list, output_file
 						if predicate in general_predicates:
 							if dic_table[predicate + "_" + predicate_object_map.object_map.value] not in g_triples:
 								knowledge_graph += triple
+								g_triples.update({dic_table[predicate + "_" + predicate_object_map.object_map.value] : {dic_table[subject] + "_" + dic_table[obj]: ""}})
 							elif dic_table[subject] + "_" + dic_table[obj] not in g_triples[dic_table[predicate + "_" + predicate_object_map.object_map.value]]:
 								knowledge_graph += triple
+								g_triples[dic_table[predicate + "_" + predicate_object_map.object_map.value]].update({dic_table[subject] + "_" + dic_table[obj]: ""})
 						else:
 							if dic_table[predicate] not in g_triples:
 								knowledge_graph += triple
+								g_triples.update({dic_table[predicate] : {dic_table[subject] + "_" + dic_table[obj]: ""}})
 							elif dic_table[subject] + "_" + dic_table[obj] not in g_triples[dic_table[predicate]]:
 								knowledge_graph += triple
+								g_triples[dic_table[predicate]].update({dic_table[subject] + "_" + dic_table[obj]: ""})
 					else:
 						knowledge_graph += triple
 			object_list = []
@@ -998,7 +1008,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date,frec
 			  d2rq:username \"root\";
 			  d2rq:password \"1234\" .
 
-			<Piliot3c> a rr:TriplesMap;
+			<Pilot3c_Mapping1> a rr:TriplesMap;
 			      rml:logicalSource [
 			      rml:source <PLATOON_DB>;
 			      rr:sqlVersion rr:SQL2008;
@@ -1070,7 +1080,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date,frec
 			      ]
 			    ].
 
-			<Piliot3c> a rr:TriplesMap;
+			<Pilot3c_Mapping2> a rr:TriplesMap;
 			      rml:logicalSource [
 			      rml:source <PLATOON_DB>;
 			      rr:sqlVersion rr:SQL2008;
@@ -1084,9 +1094,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date,frec
 			        and wwRetrievalMode=\'cyclic\' AND wwResolution=3600000 AND wwQualityRule=\'Extended\'
 			      \"\"\"
 			    ];
-			    rr:subjectMap [
-			      rr:template <DeviceExtraction2>;
-			    ];
+			    rr:subjectMap <DeviceExtraction2>;
 			   rr:predicateObjectMap [
 			      rr:predicate rdf:type ;
 			      rr:objectMap <DeviceExtraction3>
@@ -1163,6 +1171,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date,frec
 			        ];                        
 			    ].
 			<SystemExtraction>
+			rr:termType rr:IRI;
 			fnml:functionValue [
 			        rml:logicalSource
 			        [
@@ -1192,6 +1201,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date,frec
 			        ];                     
 			    ].
 			<DeviceExtraction1>
+			rr:termType rr:IRI;
 			 fnml:functionValue [
 			        rml:logicalSource
 			        [
@@ -1221,6 +1231,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date,frec
 			        ];                      
 			    ].
 			<PropertyExtraction>
+			rr:termType rr:IRI;
 			fnml:functionValue [
 			        rml:logicalSource
 			        [
@@ -1251,6 +1262,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date,frec
 			    ].
 
 			<DeviceExtraction2>
+			rr:termType rr:IRI;
 			fnml:functionValue [
 			        rml:logicalSource
 			        [
@@ -1282,6 +1294,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date,frec
 
 
 			<DeviceExtraction3>
+			rr:termType rr:IRI;
 			fnml:functionValue [
 			        rml:logicalSource
 			        [
