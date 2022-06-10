@@ -29,7 +29,10 @@ def tolower():
     return str(global_dic["value"]).lower()
 
 def DateTimeTransformation():
-    return global_dic["dateTime"] + ".00000+2:00"
+    if ".0000000" in global_dic["dateTime"]:
+        return global_dic["dateTime"] + "+2:00"
+    else:
+        return global_dic["dateTime"] + ".0000000+2:00"
 
 def BuildingExtraction():
     tokens = str(global_dic["buildingTag"]).split("_")
