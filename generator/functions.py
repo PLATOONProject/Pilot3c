@@ -17,7 +17,9 @@ global functions_pool
 ########### ADD THE IMPLEMENTATION OF YOUR FUNCTIONS HERE FOLLOWING THE EXAMPLES ####################
 #####################################################################################################
 
-functions_pool = {"tolower":"","BuildingExtraction":"","FloorExtraction":"","SystemExtraction":"","PropertyExtraction":"","DeviceExtraction1":"","DeviceExtraction2":"","DeviceExtraction3":""}
+functions_pool = {"tolower":"","BuildingExtraction":"","FloorExtraction":"","SystemExtraction":"",
+                    "PropertyExtraction":"","DeviceExtraction1":"","DeviceExtraction2":"",
+                    "DeviceExtraction3":"","DateTimeTransformation":""}
 
 
 ## Define your functions here following examples below, the column "names" from the csv files 
@@ -25,6 +27,9 @@ functions_pool = {"tolower":"","BuildingExtraction":"","FloorExtraction":"","Sys
 ## as the keys of "global_dic"
 def tolower(): 
     return str(global_dic["value"]).lower()
+
+def DateTimeTransformation():
+    return global_dic["dateTime"] + ".00000+2:00"
 
 def BuildingExtraction():
     tokens = str(global_dic["buildingTag"]).split("_")
