@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from .function_dic import *
 from .functions import *
 from .string_subs import *
+from rdflib.serializer import Serializer
 
 try:
 	from triples_map import TriplesMap as tm
@@ -982,5 +983,7 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date):
 				for row in cursor:
 					executor.submit(semantify_mysql, row, row_headers, triples_map, triples_map_list, "", "", "", host, int(port), user, password,database).result()
 	global knowledge_graph
-	print(knowledge_graph)
-	print("The Process has ended.")												
+	graph = rdflib.Graph().parse(data=knowledge_graph, format='n3')
+	#print(graph.serialize(format='json-ld', indent=4))
+	print("The Process has ended.")
+	return graph.serialize(format='json-ld', indent=4)												
