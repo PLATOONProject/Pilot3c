@@ -164,3 +164,384 @@ def create_dictionary(triple_map):
 
 	dic["inputs"] = inputs
 	return dic
+
+def mapping_generation(tags,start_date,end_date):
+	query = "SELECT DateTime, TagName, Description, Value, Quality, "
+	query += "\'" + start_date + "\' as startDate, \'" + end_date + "\' as endDate\n"
+	query += "FROM v_hist_NanoGUNE WHERE\n"
+	query += "TagName IN ("
+	for tag in tags:
+		query += "\'" + tag + "\',"
+	query = query[:-1] + ")\n "
+	query += " AND DateTime > \'" + start_date + "\' AND DateTime <= \'" + end_date + "\'\n"
+	query += " AND wwRetrievalMode=\'cyclic\' AND wwResolution=3600000 AND wwQualityRule=\'Extended\'\n"
+	query = "\"\"\"\n" + query + "\"\"\"\n"
+	mapping = """
+
+			@prefix rr: <http://www.w3.org/ns/r2rml#> .
+			@prefix rml: <http://semweb.mmlab.be/ns/rml#> .
+			@prefix ql: <http://semweb.mmlab.be/ns/ql#> .
+			@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+			@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+			@prefix schema: <http://schema.org/> .
+			@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+			@prefix owl: <http://www.w3.org/2002/07/owl#> .
+			@prefix fnml: <http://semweb.mmlab.be/ns/fnml#> .
+			@prefix fno: <https://w3id.org/function/ontology#> .
+			@prefix platoonFun: <ttp://platoon.eu/Pilot3c/function/> .
+			@prefix prov: <http://www.w3.org/ns/prov#> .
+			@prefix dcterms: <http://purl.org/dc/terms/> .
+			@prefix dc: <http://purl.org/dc/elements/1.1/> .
+			@prefix vann: <http://purl.org/vocab/vann/> .
+			@prefix voaf: <http://purl.org/vocommons/voaf#> .
+			@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+			@prefix cc: <http://creativecommons.org/ns#>.
+			@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+			@prefix seas: <https://w3id.org/seas/> .
+			@prefix time: <http://www.w3.org/2006/time#> .
+			@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+			@prefix brick: <https://brickschema.org/schema/1.1/Brick#> .
+			@prefix oema: <http://www.purl.org/oema/ontologynetwork#> .
+			@prefix s4bldg: <https://w3id.org/def/saref4bldg#> .
+			@prefix cim: <http://www.iec.ch/TC57/CIM#> .
+			@prefix gn: <https://www.geonames.org/ontology#> .
+			@prefix sch: <https://schema.org/> .
+			@prefix wgs84_pos: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+			@prefix unit: <http://www.qudt.org/2.1/vocab/unit/> .
+			@prefix qudt: <http://www.qudt.org/2.1/schema/qudt/> .
+			@prefix ontowind: <http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#> .
+			@prefix saref: <https://saref.etsi.org/core/> .
+			@prefix gn: <https://www.geonames.org/ontology#> .
+			@prefix dqv: <http://www.w3.org/ns/dqv#> .
+			@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+			@prefix plt: <https://w3id.org/platoon/>.
+
+			@base <https://w3id.org/platoon/> .
+
+			<PLATOON_DB> a d2rq:Database;
+			  d2rq:jdbcDSN \"platoon_db\"; 
+			  d2rq:jdbcDriver \"com.mysql.cj.jdbc.Driver\";
+			  d2rq:username \"root\";
+			  d2rq:password \"1234\" .
+
+			<Pilot3c_Mapping1> a rr:TriplesMap;
+			      rml:logicalSource [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			    rr:subjectMap [
+			      rr:template \"https://w3id.org/platoon/Pilot3c/{DateTime}-{TagName}\";
+			    ];
+			    
+			    rr:predicateObjectMap [
+			      rr:predicate time:inXSDDateTime;
+			      rr:objectMap <DateTimeTransformation>
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate seas:building;
+			      rr:objectMap <BuildingExtraction>
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate s4bldg:floor;
+			      rr:objectMap <FloorExtraction>
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate seas:system;
+			      rr:objectMap <SystemExtraction>
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate saref:device ;
+			      rr:objectMap <DeviceExtraction1> 
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate seas:isPropertyOf ; 
+			      rr:objectMap <PropertyExtraction>
+			    ];
+			 
+			    rr:predicateObjectMap [
+			      rr:predicate saref:device ;
+			      rr:objectMap <DeviceExtraction2>
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate time:hasBeginning; 
+			      rr:objectMap <startDateTransformation>
+			    ];
+			 
+			    rr:predicateObjectMap [
+			      rr:predicate time:hasEnded;
+			      rr:objectMap <endDateTransformation>
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate seas:evaluatedSimpleValue;
+			      rr:objectMap [
+			        rml:reference  \"Value\";
+			        rr:datatype xsd:decimal 
+			      ]
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate dqv:value;
+			      rr:objectMap [
+			        rml:reference  \"Quality\";
+			        rr:datatype xsd:decimal  
+			      ]
+			    ].
+
+			<Pilot3c_Mapping2> a rr:TriplesMap;
+			      rml:logicalSource [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			    rr:subjectMap <DeviceExtraction2>;
+			   rr:predicateObjectMap [
+			      rr:predicate rdf:type ;
+			      rr:objectMap <DeviceExtraction3>
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate dc:description ;
+			      rr:objectMap [
+			        rml:reference  \"Description\";
+			        rr:datatype xsd:string ;
+			      ]
+			    ].
+			 
+			<BuildingExtraction>
+				  fnml:functionValue [
+				    rml:logicalSource
+				    [
+				  rml:source <PLATOON_DB>;
+				  rr:sqlVersion rr:SQL2008;
+				  rml:query <PLATOON_QUERY>
+				];
+				    rr:predicateObjectMap [
+				        rr:predicate fno:executes ;
+				        rr:objectMap [ 
+				            rr:constant platoonFun:BuildingExtraction 
+				        ]
+				    ]; 
+				    rr:predicateObjectMap [
+				        rr:predicate platoonFun:buildingTag;
+				        rr:objectMap [ 
+				            rml:reference \"TagName\" 
+				        ];
+				    ];  
+				].
+
+			<FloorExtraction>
+			fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:FloorExtraction 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:floorTag;
+			            rr:objectMap [ 
+			                rml:reference \"TagName\" 
+			            ]; 
+			        ];                        
+			    ].
+			<SystemExtraction>
+			rr:termType rr:IRI;
+			fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:SystemExtraction 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:systemTag;
+			            rr:objectMap [ 
+			                rml:reference \"TagName\" 
+			            ];    
+			        ];                     
+			    ].
+			<DeviceExtraction1>
+			rr:termType rr:IRI;
+			 fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:DeviceExtraction1 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:deviceTag;
+			            rr:objectMap [ 
+			                rml:reference \"TagName\" 
+			            ];   
+			        ];                      
+			    ].
+			<PropertyExtraction>
+			rr:termType rr:IRI;
+			fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:PropertyExtraction 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:propertyTag;
+			            rr:objectMap [ 
+			                rml:reference \"TagName\" 
+			            ];
+			        ];                         
+			    ].
+
+			<DeviceExtraction2>
+			rr:termType rr:IRI;
+			fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:DeviceExtraction2 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:deviceTag;
+			            rr:objectMap [ 
+			                rml:reference \"TagName\" 
+			            ]; 
+			        ];                        
+			    ].
+
+
+			<DeviceExtraction3>
+			rr:termType rr:IRI;
+			fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:DeviceExtraction3 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:deviceTag;
+			            rr:objectMap [ 
+			                rml:reference \"TagName\" 
+			            ]; 
+			        ];                        
+			    ].
+
+	    	<startDateTransformation>
+			rr:datatype xsd:dateTime;
+			fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:DateTimeTransformation 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:dateTime;
+			            rr:objectMap [ 
+			                rml:reference \"startDate\" 
+			            ]; 
+			        ];                        
+			    ].
+
+
+		    <endDateTransformation>
+			rr:datatype xsd:dateTime;
+			fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query  <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:DateTimeTransformation 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:dateTime;
+			            rr:objectMap [ 
+			                rml:reference \"endDate\" 
+			            ]; 
+			        ];                        
+			    ].
+
+		    <DateTimeTransformation>
+			rr:datatype xsd:dateTime;
+			fnml:functionValue [
+			        rml:logicalSource
+			        [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query  <PLATOON_QUERY>
+			    ];
+			        rr:predicateObjectMap [
+			            rr:predicate fno:executes ;
+			            rr:objectMap [ 
+			                rr:constant platoonFun:DateTimeTransformation 
+			            ]
+			        ]; 
+			        rr:predicateObjectMap [
+			            rr:predicate platoonFun:dateTime;
+			            rr:objectMap [ 
+			                rml:reference \"DateTime\" 
+			            ]; 
+			        ];                        
+			    ].
+
+
+	"""
+	return mapping.replace("<PLATOON_QUERY>",query)
