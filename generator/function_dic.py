@@ -165,16 +165,16 @@ def create_dictionary(triple_map):
 	dic["inputs"] = inputs
 	return dic
 
-def mapping_generation(tags,start_date,end_date):
+def mapping_generation(table,tags,start_date,end_date,resolution):
 	query = "SELECT DateTime, TagName, Description, Value, Quality, "
 	query += "\'" + start_date + "\' as startDate, \'" + end_date + "\' as endDate\n"
-	query += "FROM v_hist_NanoGUNE WHERE\n"
+	query += "FROM " + table + " WHERE\n"
 	query += "TagName IN ("
 	for tag in tags:
 		query += "\'" + tag + "\',"
 	query = query[:-1] + ")\n "
 	query += " AND DateTime > \'" + start_date + "\' AND DateTime <= \'" + end_date + "\'\n"
-	query += " AND wwRetrievalMode=\'cyclic\' AND wwResolution=3600000 AND wwQualityRule=\'Extended\'\n"
+	query += " AND wwRetrievalMode=\'cyclic\' AND wwResolution="+ str(resolution) + " AND wwQualityRule=\'Extended\'\n"
 	query = "\"\"\"\n" + query + "\"\"\"\n"
 	mapping = """
 
