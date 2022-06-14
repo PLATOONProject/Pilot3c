@@ -15,6 +15,7 @@ from .function_dic import *
 from .functions import *
 from .string_subs import *
 from rdflib.serializer import Serializer
+import json
 
 try:
 	from triples_map import TriplesMap as tm
@@ -964,9 +965,9 @@ def semantify_mysql(row, row_headers, triples_map, triples_map_list, output_file
 		else:
 			continue
 
-def generate_data(user,password,host,port,database,tags,start_date,end_date):
+def generate_data(user,password,host,port,database,table,tags,start_date,end_date,resolution):
 	
-	mapping = mapping_generation(tags,start_date,end_date)
+	mapping = mapping_generation(table,tags,start_date,end_date,resolution)
 
 	db = connector.connect(host = host, port = int(port), user = user, password = password)
 	cursor = db.cursor(buffered=True)
@@ -984,6 +985,9 @@ def generate_data(user,password,host,port,database,tags,start_date,end_date):
 					executor.submit(semantify_mysql, row, row_headers, triples_map, triples_map_list, "", "", "", host, int(port), user, password,database).result()
 	global knowledge_graph
 	graph = rdflib.Graph().parse(data=knowledge_graph, format='n3')
-	#print(graph.serialize(format='json-ld', indent=4))
+	data_list = json.loads(graph.serialize(format='json-ld', indent=4))
+	#print(graph.serialize(format='json-ld', indent=4)) 
+	#for elem in data_list:
+	#	print(elem)
 	print("The Process has ended.")
-	return graph.serialize(format='json-ld', indent=4)												
+	return data_list											
