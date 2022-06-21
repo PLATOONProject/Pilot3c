@@ -16,6 +16,7 @@ from .functions import *
 from .string_subs import *
 from rdflib.serializer import Serializer
 import json
+import pyodbc
 
 try:
 	from triples_map import TriplesMap as tm
@@ -965,13 +966,26 @@ def semantify_mysql(row, row_headers, triples_map, triples_map_list, output_file
 		else:
 			continue
 
-def generate_data(user,password,host,port,database,table,tags,start_date,end_date,resolution):
+def generate_data(user,password,host,port,database,table,tags,start_date,end_date,resolution,sqlserver):
 	
 	mapping = mapping_generation(table,tags,start_date,end_date,resolution)
 
-	db = connector.connect(host = host, port = int(port), user = user, password = password)
-	cursor = db.cursor(buffered=True)
-	cursor.execute("use " + database)
+	if sqlserver:
+		if len(pyodbc.drivers()) != 0:
+			driver = "{" + pyodbc.drivers()[0] + "}"
+		else:
+			driver = "{}"
+		conn = pyodbc.connect("DRIVER=" + driver
+								+ ";SERVER=" + host + "," + port
+								+ ";DATABASE=" + database
+								+ ";UID=" + user
+								+ ";PWD=" + password
+								+ ";Trusted_Connection=yes")
+		cursor = conn.cursor(buffered=True)
+	else:
+		db = connector.connect(host = host, port = int(port), user = user, password = password)
+		cursor = db.cursor(buffered=True)
+		cursor.execute("use " + database)
 
 	print("Beginning Data Generation Process.")
 

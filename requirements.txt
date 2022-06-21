@@ -3,3 +3,5 @@ rdflib
 isodate==0.6.0
 six==1.11.0
 rdflib-jsonld
+request
+pandas

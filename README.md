@@ -8,7 +8,7 @@ pip install -r requeriments.txt
 ## Example of Importing the Function
 ```
 from generator.generator import generate_data
-generate_data("user","password","host","port","db", "table", tags,"start_date","end_date", resolution)
+generate_data("user","password","host","port","db", "table", tags,"start_date","end_date", resolution, sqlserver)
 ```
 
 ## Parameters
@@ -21,3 +21,4 @@ generate_data("user","password","host","port","db", "table", tags,"start_date","
 - start_date: Start date for the query.
 - end_date: End date for the query.
 - resolution: Resolution for the query.
+- sqlserver: Indicates if the MySQL database is SQL Server or not.
