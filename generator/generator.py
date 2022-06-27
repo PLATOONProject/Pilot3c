@@ -980,8 +980,8 @@ def generate_data(user,password,host,port,database,table,tags,start_date,end_dat
 								+ ";DATABASE=" + database
 								+ ";UID=" + user
 								+ ";PWD=" + password
-								+ ";Trusted_Connection=yes")
-		cursor = conn.cursor(buffered=True)
+								+ ";trustServerCertificate=yes")
+		cursor = conn.cursor()
 	else:
 		db = connector.connect(host = host, port = int(port), user = user, password = password)
 		cursor = db.cursor(buffered=True)

@@ -5,3 +5,4 @@ six==1.11.0
 rdflib-jsonld
 request
 pandas
+pyodbc
