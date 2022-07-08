@@ -19,7 +19,7 @@ global functions_pool
 
 functions_pool = {"tolower":"","BuildingExtraction":"","FloorExtraction":"","SystemExtraction":"",
                     "PropertyExtraction":"","DeviceExtraction1":"","DeviceExtraction2":"",
-                    "DeviceExtraction3":"","DateTimeTransformation":""}
+                    "DeviceExtraction3":"","DateTimeTransformation":"","LocationExtraction":""}
 
 
 ## Define your functions here following examples below, the column "names" from the csv files 
@@ -41,6 +41,15 @@ def BuildingExtraction():
 def FloorExtraction():
     return str(global_dic["floorTag"]).split("_")[2]
 
+def LocationExtraction():
+    dic = {
+            "DON":"Donosti/San Sebastián",
+            "ESP":"Spain"
+            }
+    for key in dic:
+        if key in str(global_dic["locationTag"]):
+            return dic[key]
+
 def SystemExtraction():
     dic = {
             "CLD":"https://w3id.org/platoon/coolingsystem",
@@ -59,6 +68,7 @@ def PropertyExtraction():
             "CLK":"http://www.w3.org/2006/time#hours",
             "CUR":"https://w3id.org/seas/ElectricalCurrent",
             "ENG":"https://w3id.org/seas/electricEnergyProperty",
+            "EUR":"https://schema.org/price",
             "FRQ":"https://w3id.org/seas/frequencyproperty",
             "HEX":"http://www.semanticweb.org/ontologies/2011/9/Ontology1318785573683.owl#Humidity",
             "I01":"https://w3id.org/seas/rCurrent",

@@ -967,9 +967,14 @@ def semantify_mysql(row, row_headers, triples_map, triples_map_list, output_file
 			continue
 
 def generate_data(user,password,host,port,database,table,tags,start_date,end_date,resolution,sqlserver):
-	
 	mapping = mapping_generation(table,tags,start_date,end_date,resolution)
+	return kg_generation(user,password,host,port,database,table,sqlserver,mapping)
 
+def generate_forecast_data(user,password,host,port,database,table,tags,date_saved,start_date,end_date,sqlserver):
+	mapping = forecast_mapping_generation(table,tags,date_saved,start_date,end_date)
+	return kg_generation(user,password,host,port,database,table,sqlserver,mapping)
+
+def kg_generation(user,password,host,port,database,table,sqlserver,mapping):
 	if sqlserver:
 		if len(pyodbc.drivers()) != 0:
 			driver = "{" + pyodbc.drivers()[0] + "}"
