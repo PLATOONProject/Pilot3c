@@ -215,6 +215,8 @@ def forecast_mapping_generation(table,tags,date_saved,start_date,end_date):
 			@prefix dqv: <http://www.w3.org/ns/dqv#> .
 			@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
 			@prefix plt: <https://w3id.org/platoon/>.
+			@prefix dbr: <http://dbpedia.org/resource/>.
+			@prefix dbo: <http://dbpedia.org/ontology/>.
 
 			@base <https://w3id.org/platoon/> .
 
@@ -223,6 +225,56 @@ def forecast_mapping_generation(table,tags,date_saved,start_date,end_date):
 			  d2rq:jdbcDriver \"com.mysql.cj.jdbc.Driver\";
 			  d2rq:username \"root\";
 			  d2rq:password \"1234\" .
+
+		  	<Pilot3c_Spain> a rr:TriplesMap;
+			      rml:logicalSource [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			    rr:subjectMap [
+			      rr:template \"https://w3id.org/platoon/Pilot3c/Spain\";
+			      rr:class dbo:Location;
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate owl:sameAs;
+			      rr:objectMap [
+			      		rr:template \"https://www.wikidata.org/entity/Q29\";
+			      ]; 
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate owl:sameAs;
+			      rr:objectMap [
+			      		rr:constant dbr:Spain;
+			      ]; 
+			    ].
+
+		    <Pilot3c_Donosti> a rr:TriplesMap;
+			      rml:logicalSource [
+			      rml:source <PLATOON_DB>;
+			      rr:sqlVersion rr:SQL2008;
+			      rml:query <PLATOON_QUERY>
+			    ];
+			    rr:subjectMap [
+			      rr:template \"https://w3id.org/platoon/Pilot3c/Donosti-San%20Sebasti%C3%A1n\";
+			      rr:class dbo:Location;
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate owl:sameAs;
+			      rr:objectMap [
+			      		rr:template \"https://www.wikidata.org/entity/Q10313\";
+			      ]; 
+			    ];
+
+			    rr:predicateObjectMap [
+			      rr:predicate owl:sameAs;
+			      rr:objectMap [
+			      		rr:constant dbr:Donostia-San%20Sebasti%C3%A1n;
+			      ]; 
+			    ].
 
 			<Pilot3c_Mapping1> a rr:TriplesMap;
 			      rml:logicalSource [
@@ -240,6 +292,10 @@ def forecast_mapping_generation(table,tags,date_saved,start_date,end_date):
 			      rr:objectMap <LocationExtraction>
 			    ];
 
+			    rr:predicateObjectMap [
+			      rr:predicate seas:locationResource;
+			      rr:objectMap <LocationExtractionResource>
+			    ];
 
 			    rr:predicateObjectMap [
 			      rr:predicate seas:system;
@@ -299,6 +355,29 @@ def forecast_mapping_generation(table,tags,date_saved,start_date,end_date):
 				        rr:predicate fno:executes ;
 				        rr:objectMap [ 
 				            rr:constant platoonFun:LocationExtraction 
+				        ]
+				    ]; 
+				    rr:predicateObjectMap [
+				        rr:predicate platoonFun:locationTag;
+				        rr:objectMap [ 
+				            rml:reference \"TagName\" 
+				        ];
+				    ];  
+				].
+
+			<LocationExtractionResource>
+				rr:termType rr:IRI;
+				  fnml:functionValue [
+				    rml:logicalSource
+				    [
+				  rml:source <PLATOON_DB>;
+				  rr:sqlVersion rr:SQL2008;
+				  rml:query <PLATOON_QUERY>
+				];
+				    rr:predicateObjectMap [
+				        rr:predicate fno:executes ;
+				        rr:objectMap [ 
+				            rr:constant platoonFun:LocationExtractionResource 
 				        ]
 				    ]; 
 				    rr:predicateObjectMap [

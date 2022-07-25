@@ -19,7 +19,8 @@ global functions_pool
 
 functions_pool = {"tolower":"","BuildingExtraction":"","FloorExtraction":"","SystemExtraction":"",
                     "PropertyExtraction":"","DeviceExtraction1":"","DeviceExtraction2":"",
-                    "DeviceExtraction3":"","DateTimeTransformation":"","LocationExtraction":""}
+                    "DeviceExtraction3":"","DateTimeTransformation":"","LocationExtraction":"",
+                    "LocationExtractionResource":""}
 
 
 ## Define your functions here following examples below, the column "names" from the csv files 
@@ -45,6 +46,15 @@ def LocationExtraction():
     dic = {
             "DON":"Donosti/San Sebastián",
             "ESP":"Spain"
+            }
+    for key in dic:
+        if key in str(global_dic["locationTag"]):
+            return dic[key]
+
+def LocationExtractionResource():
+    dic = {
+            "DON":"https://w3id.org/platoon/Pilot3c/Donosti-San Sebastián",
+            "ESP":"https://w3id.org/platoon/Pilot3c/Spain"
             }
     for key in dic:
         if key in str(global_dic["locationTag"]):
